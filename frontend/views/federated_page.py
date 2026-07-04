@@ -1,5 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
+import json
+import os
 
 def show():
     st.title("Federated Learning Monitor")
@@ -12,10 +14,19 @@ def show():
     col2.metric("Hospital B", "Active", "Weights submitted")
     col3.metric("Hospital C", "Active", "Awaiting global model")
 
-    # Accuracy over rounds — use mock data until Aarya's FL module is ready
+    # Load real FL results from JSON
     st.subheader("Global Model Accuracy per Round")
-    rounds = list(range(1, 11))
-    accuracy = [0.61, 0.70, 0.74, 0.78, 0.81, 0.84, 0.86, 0.88, 0.89, 0.91]
+    history_path = os.path.join(os.path.dirname(__file__), "../../docs/fl_round_history.json")
+
+    try:
+        with open(history_path, "r") as f:
+            history = json.load(f)
+        rounds = list(range(1, len(history) + 1))
+        accuracy = [entry["accuracy"] for entry in history]
+    except FileNotFoundError:
+        st.warning("FL history file not found — showing mock data")
+        rounds = list(range(1, 6))
+        accuracy = [0.78, 0.86, 0.73, 0.90, 0.90]
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=rounds, y=accuracy, mode='lines+markers',
@@ -25,8 +36,8 @@ def show():
                       yaxis=dict(range=[0, 1]))
     st.plotly_chart(fig, use_container_width=True)
 
-    # Summary metrics
+    # Summary metrics pulled from real data
     col1, col2, col3 = st.columns(3)
-    col1.metric("Total Rounds", "10")
-    col2.metric("Final Global Accuracy", "91.0%")
+    col1.metric("Total Rounds", str(len(rounds)))
+    col2.metric("Final Global Accuracy", f"{accuracy[-1]*100:.1f}%")
     col3.metric("Hospitals Participating", "3")
