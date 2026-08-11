@@ -1,4 +1,4 @@
-"""
+﻿"""
 dataset.py
 Preprocessing pipeline for the Brain Tumor MRI dataset.
 Handles: resizing, normalization, augmentation, train/val split, DataLoaders.
@@ -14,7 +14,7 @@ IMG_SIZE = 224                    # standard input size for ResNet18 / Efficient
 BATCH_SIZE = 32
 VAL_SPLIT = 0.15                  # carve a validation set out of Training/
 
-# ImageNet normalization stats — required because we're using pretrained models
+# ImageNet normalization stats - required because we're using pretrained models
 MEAN = [0.485, 0.456, 0.406]
 STD = [0.229, 0.224, 0.225]
 
@@ -24,6 +24,7 @@ train_transforms = transforms.Compose([
     transforms.Resize((IMG_SIZE, IMG_SIZE)),
     transforms.RandomHorizontalFlip(p=0.3),
     transforms.RandomRotation(10),
+    transforms.ColorJitter(brightness=0.15, contrast=0.15),
     transforms.ToTensor(),
     transforms.Normalize(mean=MEAN, std=STD),
 ])
@@ -47,7 +48,7 @@ def get_dataloaders():
         root=f"{DATA_DIR}/Training", transform=train_transforms
     )
 
-    # Testing/ folder is kept completely separate — used only for final evaluation
+    # Testing/ folder is kept completely separate - used only for final evaluation
     test_data = datasets.ImageFolder(
         root=f"{DATA_DIR}/Testing", transform=eval_transforms
     )
@@ -62,7 +63,7 @@ def get_dataloaders():
     train_size = len(full_train_data) - val_size
     train_data, val_data = random_split(full_train_data, [train_size, val_size])
 
-    # Validation set should NOT have augmentation — override its transform
+    # Validation set should NOT have augmentation - override its transform
     val_data.dataset.transform = eval_transforms
 
     train_loader = DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
@@ -73,7 +74,7 @@ def get_dataloaders():
 
 
 if __name__ == "__main__":
-    # Quick sanity check — run this file directly to confirm everything loads
+    # Quick sanity check - run this file directly to confirm everything loads
     train_loader, val_loader, test_loader, class_names = get_dataloaders()
 
     images, labels = next(iter(train_loader))

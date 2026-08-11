@@ -1,4 +1,4 @@
-"""
+﻿"""
 train.py
 Builds and trains a ResNet18-based classifier on the Brain Tumor MRI dataset
 using transfer learning. Saves the trained model + prints evaluation metrics.
@@ -15,9 +15,9 @@ import seaborn as sns
 from dataset import get_dataloaders
 
 # ---- Config ----
-DEVICE = torch.device("cpu")  # MX130 GPU is too old (CUDA capability 5.0) for current PyTorch — using CPU
+DEVICE = torch.device("cpu")  # MX130 GPU is too old (CUDA capability 5.0) for current PyTorch - using CPU
 EPOCHS = 10
-LEARNING_RATE = 0.0005  # lowered from 0.001 since layer4 now trains too — keeps its pretrained weights from shifting too aggressively
+LEARNING_RATE = 0.0005  # lowered from 0.001 since layer4 now trains too - keeps its pretrained weights from shifting too aggressively
 MODEL_SAVE_PATH = "../models/mri_classifier.pt"
 
 print(f"Using device: {DEVICE}")
@@ -31,7 +31,7 @@ def build_model(num_classes):
     """
     model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
 
-    # Freeze all earlier layers — they already know how to detect edges,
+    # Freeze all earlier layers - they already know how to detect edges,
     # textures, shapes. We don't want to destroy that knowledge.
     for param in model.parameters():
         param.requires_grad = False
@@ -45,9 +45,17 @@ def build_model(num_classes):
     for param in model.layer4.parameters():
         param.requires_grad = True
 
-    # Replace the final classification layer to output 4 classes instead of 1000
+    # Replace the final classification layer to output 4 classes instead of
+    # 1000. Dropout added before it: with only layer4+fc trainable and no
+    # regularization at all, the model was overfitting - confidently wrong
+    # on real-world input despite near-100% confidence on the Testing set.
+    # Dropout has no effect during model.eval() (inference), so this only
+    # changes training behavior, not runtime prediction behavior.
     num_features = model.fc.in_features
-    model.fc = nn.Linear(num_features, num_classes)
+    model.fc = nn.Sequential(
+        nn.Dropout(0.4),
+        nn.Linear(num_features, num_classes)
+    )
 
     return model.to(DEVICE)
 
@@ -105,13 +113,14 @@ def main():
     num_classes = len(class_names)
 
     model = build_model(num_classes)
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)  # caps overconfidence
     # Now training both the new final layer AND layer4. layer4 already has
     # decent pretrained weights, so we don't want to blow them away with a
-    # big learning rate — Adam will adjust fc faster than layer4 in practice,
+    # big learning rate - Adam will adjust fc faster than layer4 in practice,
     # but a single conservative LR for both keeps this simple and stable.
+    # weight_decay adds L2 regularization - the model previously had none.
     trainable_params = [p for p in model.parameters() if p.requires_grad]
-    optimizer = optim.Adam(trainable_params, lr=LEARNING_RATE)
+    optimizer = optim.Adam(trainable_params, lr=LEARNING_RATE, weight_decay=1e-4)
 
     history = {"train_acc": [], "val_acc": [], "train_loss": [], "val_loss": []}
     best_val_acc = 0.0  # tracks the best validation accuracy seen so far across epochs
@@ -132,7 +141,7 @@ def main():
 
         # Save a checkpoint only when validation accuracy improves. This way,
         # even if later epochs overfit and val accuracy drops, we still keep
-        # the best version the model reached — not just whatever the last
+        # the best version the model reached - not just whatever the last
         # epoch happened to be.
         if val_acc > best_val_acc:
             best_val_acc = val_acc
@@ -172,6 +181,19 @@ def main():
     plt.legend()
     plt.savefig("../docs/accuracy_curve.png")
     print("Accuracy curve saved to docs/accuracy_curve.png")
+
+    # ---- Plot loss curve ----
+    # Loss reveals overfitting earlier/more clearly than accuracy - val
+    # loss can visibly start rising while val accuracy still looks stable.
+    plt.figure(figsize=(8, 5))
+    plt.plot(history["train_loss"], label="Train Loss")
+    plt.plot(history["val_loss"], label="Validation Loss")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Training vs Validation Loss")
+    plt.legend()
+    plt.savefig("../docs/loss_curve.png")
+    print("Loss curve saved to docs/loss_curve.png")
 
     # ---- Plot confusion matrix ----
     cm = confusion_matrix(labels, preds)
