@@ -1,13 +1,18 @@
-"""
+﻿"""
 server.py
 Flower federated learning server.
-Coordinates training rounds across all hospital clients using FedAvg —
-averages the weights received from each hospital into a single global model.
+Coordinates training rounds across all hospital clients using FedProx -
+averages the weights received from each hospital into a single global
+model, same as FedAvg, but each hospital's LOCAL training is regularized
+toward the global model via a proximal term (see client.py's fit()).
+This is intended to help with client heterogeneity (hospitals with
+different data distributions/amounts diverging too far from the global
+model during local training) compared to plain FedAvg.
 No raw data ever passes through here, only model weights.
 """
 
 import flwr as fl
-from flwr.server.strategy import FedAvg
+from flwr.server.strategy import FedProx
 import json
 from datetime import datetime
 
@@ -16,6 +21,14 @@ NUM_ROUNDS = 5          # how many federated rounds to run
 MIN_CLIENTS = 3         # wait until all 3 hospitals are connected before starting
 MIN_FIT_CLIENTS = 3     # all 3 must participate in each training round
 MIN_EVAL_CLIENTS = 3    # all 3 must participate in each evaluation round
+
+# FedProx proximal term coefficient (mu). 0.0 makes FedProx mathematically
+# identical to FedAvg - this is the one new hyperparameter FedProx adds.
+# 0.01 is a modest starting value; the original FedProx paper uses higher
+# values (up to 1.0) for more heterogeneous/non-convex settings. This is
+# a tunable knob, not a validated clinical constant - worth stating as
+# such if asked in viva.
+PROXIMAL_MU = 0.01
 
 # Track accuracy per round for comparison graphs later
 round_history = []
@@ -33,7 +46,7 @@ def evaluate_config(server_round: int):
 def weighted_average(metrics):
     """
     FedAvg aggregation for evaluation metrics.
-    Each hospital's accuracy is weighted by how many images it has —
+    Each hospital's accuracy is weighted by how many images it has -
     hospitals with more data have more influence on the global metric.
     This is fairer than a simple average when hospitals have different dataset sizes.
     """
@@ -48,7 +61,7 @@ def weighted_average(metrics):
     return {"accuracy": avg_accuracy}
 
 
-strategy = FedAvg(
+strategy = FedProx(
     fraction_fit=1.0,               # use 100% of available clients each round
     fraction_evaluate=1.0,
     min_fit_clients=MIN_FIT_CLIENTS,
@@ -57,6 +70,12 @@ strategy = FedAvg(
     on_fit_config_fn=fit_config,
     on_evaluate_config_fn=evaluate_config,
     evaluate_metrics_aggregation_fn=weighted_average,
+    proximal_mu=PROXIMAL_MU,
+    # NOTE: FedProx automatically merges "proximal_mu" into the config
+    # dict sent to every client's fit() call, on top of whatever
+    # on_fit_config_fn (fit_config, above) already returns - no change
+    # needed to fit_config() itself. Confirmed against the installed
+    # flwr package's FedProx.configure_fit() source.
 )
 
 
@@ -68,7 +87,7 @@ def save_history():
 
 
 if __name__ == "__main__":
-    print(f"Starting Flower server — waiting for {MIN_CLIENTS} hospital clients...")
+    print(f"Starting Flower server (FedProx, mu={PROXIMAL_MU}) - waiting for {MIN_CLIENTS} hospital clients...")
     print(f"Running {NUM_ROUNDS} federated rounds\n")
 
     history = fl.server.start_server(
