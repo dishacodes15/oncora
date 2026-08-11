@@ -1,0 +1,20 @@
+drug,unit,max_single_dose,max_daily_dose,notes
+aspirin,mg,650,4000,Standard analgesic dosing; low-dose antiplatelet use is 81mg
+paracetamol,mg,1000,4000,Hepatotoxicity risk rises sharply above 4000mg/day
+acetaminophen,mg,1000,4000,Same substance as paracetamol
+ibuprofen,mg,800,3200,OTC labeling caps self-directed use at 1200mg/day
+warfarin,mg,10,10,Highly individualized; typical maintenance dose is 2-10mg
+metformin,mg,1000,2550,Extended-release formulations have separate labeling
+lisinopril,mg,40,40,
+atorvastatin,mg,80,80,
+simvastatin,mg,80,80,80mg dose restricted due to myopathy risk in most patients
+omeprazole,mg,40,80,Typically dosed once or twice daily depending on indication
+clopidogrel,mg,75,150,Loading doses up to 600mg are used short-term under supervision
+amoxicillin,mg,1000,3000,
+sertraline,mg,200,200,
+digoxin,mg,0.5,0.5,Narrow therapeutic index; typical maintenance is 0.125-0.25mg
+furosemide,mg,600,600,Oral typical range is far lower; higher doses used in severe edema under supervision
+amiodarone,mg,400,400,Maintenance dose; loading doses are higher short-term under supervision
+fluoxetine,mg,80,80,
+tramadol,mg,100,400,
+codeine,mg,60,360,

@@ -17,6 +17,13 @@ env/
 # Datasets 
 datasets/
 
+# NLP / interaction store — regenerated, not source-controlled.
+# drug_vocab.json IS committed (it's the vocab_builder.py output —
+# see backend/nlp/vocab_builder.py) since it's needed at runtime and
+# only regenerated weekly/monthly.
+data/interactions.db
+data/.drug_vocab_checkpoint.json
+
 # Notebooks checkpoints
 .ipynb_checkpoints/
 
@@ -27,3 +34,9 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+data/dose_limits.db
+data/drug_vocab.json
+models/*.pt
+docs/fl_round_history.json
+docs/nlp_eval_history.json
+.pytest_cache/

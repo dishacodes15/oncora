@@ -1,0 +1,62 @@
+[
+  {
+    "text": "Paracetamol 500mg twice daily. Warfarin 5mg once a day.",
+    "expected_drugs": ["paracetamol", "warfarin"]
+  },
+  {
+    "text": "Take Aspirin 100mg with food, and Metformin 500mg with dinner.",
+    "expected_drugs": ["aspirin", "metformin"]
+  },
+  {
+    "text": "Patient prescribed Lisinopril 10mg daily for hypertension.",
+    "expected_drugs": ["lisinopril"]
+  },
+  {
+    "text": "Ibuprofen 400mg every 6 hours as needed for pain.",
+    "expected_drugs": ["ibuprofen"]
+  },
+  {
+    "text": "Sertraline 50mg each morning, Tramadol 50mg as needed.",
+    "expected_drugs": ["sertraline", "tramadol"]
+  },
+  {
+    "text": "Continue Atorvastatin 20mg at bedtime. Also on Amiodarone 200mg daily.",
+    "expected_drugs": ["atorvastatin", "amiodarone"]
+  },
+  {
+    "text": "Digoxin 0.125mg daily, Furosemide 40mg twice daily.",
+    "expected_drugs": ["digoxin", "furosemide"]
+  },
+  {
+    "text": "Omeprazole 20mg before breakfast. Clopidogrel 75mg daily.",
+    "expected_drugs": ["omeprazole", "clopidogrel"]
+  },
+  {
+    "text": "Amoxicillin 500mg three times daily for 7 days.",
+    "expected_drugs": ["amoxicillin"]
+  },
+  {
+    "text": "The patient reported mild headache and nausea after the appointment.",
+    "expected_drugs": []
+  },
+  {
+    "text": "No current medications. Patient advised to rest and stay hydrated.",
+    "expected_drugs": []
+  },
+  {
+    "text": "Follow up in two weeks regarding blood pressure and cholesterol levels.",
+    "expected_drugs": []
+  },
+  {
+    "text": "Codeine 30mg as needed for cough, avoid with Tramadol.",
+    "expected_drugs": ["codeine", "tramadol"]
+  },
+  {
+    "text": "SIMVASTATIN 40MG NIGHTLY. FLUOXETINE 20MG EACH MORNING.",
+    "expected_drugs": ["simvastatin", "fluoxetine"]
+  },
+  {
+    "text": "warfarin 5mg, aspirin 81mg, metformin 1000mg - all once daily",
+    "expected_drugs": ["warfarin", "aspirin", "metformin"]
+  }
+]

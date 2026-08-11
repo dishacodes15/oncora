@@ -1,0 +1,22 @@
+drug_a,drug_b,severity,description
+aspirin,warfarin,HIGH,Increases bleeding risk significantly due to combined antiplatelet and anticoagulant effect
+aspirin,clopidogrel,HIGH,Increases bleeding risk; combined antiplatelet effect
+aspirin,ibuprofen,MEDIUM,Ibuprofen may reduce aspirin's cardioprotective antiplatelet effect if taken together
+warfarin,ibuprofen,HIGH,NSAIDs increase bleeding risk and can potentiate warfarin's anticoagulant effect
+warfarin,amiodarone,HIGH,Amiodarone significantly increases warfarin plasma levels; requires dose adjustment and monitoring
+warfarin,fluoxetine,MEDIUM,May increase anticoagulant effect; monitor INR closely
+metformin,furosemide,MEDIUM,Furosemide may affect renal function relevant to metformin clearance; monitor kidney function
+digoxin,furosemide,MEDIUM,Furosemide-induced electrolyte loss (hypokalemia) increases digoxin toxicity risk
+digoxin,amiodarone,HIGH,Amiodarone significantly increases digoxin plasma concentration; risk of toxicity
+sertraline,tramadol,HIGH,Combined serotonergic effect increases risk of serotonin syndrome
+fluoxetine,tramadol,HIGH,Combined serotonergic effect increases risk of serotonin syndrome
+codeine,tramadol,MEDIUM,Combined opioid effect increases risk of respiratory depression and sedation
+ibuprofen,lisinopril,MEDIUM,NSAIDs may reduce the antihypertensive effect of ACE inhibitors and affect renal function
+lisinopril,furosemide,LOW,Combined use may cause additive blood-pressure-lowering effect; monitor for hypotension
+atorvastatin,amiodarone,MEDIUM,Amiodarone increases statin plasma levels, raising risk of myopathy
+simvastatin,amiodarone,HIGH,Amiodarone significantly increases simvastatin levels; increased risk of rhabdomyolysis
+omeprazole,clopidogrel,MEDIUM,Omeprazole may reduce clopidogrel's antiplatelet effectiveness via CYP2C19 inhibition
+paracetamol,warfarin,LOW,High-dose or prolonged paracetamol use may modestly potentiate warfarin's effect; monitor INR
+aspirin,paracetamol,LOW,No significant interaction at standard doses; generally considered safe to combine
+metformin,omeprazole,LOW,No clinically significant interaction expected at standard doses
+amoxicillin,warfarin,MEDIUM,Antibiotics can alter gut flora and potentiate warfarin's anticoagulant effect

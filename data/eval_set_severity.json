@@ -1,0 +1,55 @@
+[
+  {
+    "text": "Concomitant use of warfarin with aspirin is contraindicated due to significantly increased bleeding risk.",
+    "other_drug": "aspirin",
+    "expected_severity": "HIGH"
+  },
+  {
+    "text": "Coadministration with amiodarone should be avoided; fatal arrhythmias have been reported.",
+    "other_drug": "amiodarone",
+    "expected_severity": "HIGH"
+  },
+  {
+    "text": "Patients should not use this medication with tramadol due to risk of serotonin syndrome.",
+    "other_drug": "tramadol",
+    "expected_severity": "HIGH"
+  },
+  {
+    "text": "May increase plasma concentration of digoxin; monitor closely and adjust dose as needed.",
+    "other_drug": "digoxin",
+    "expected_severity": "MEDIUM"
+  },
+  {
+    "text": "Use with caution when combined with furosemide, as electrolyte imbalance may occur.",
+    "other_drug": "furosemide",
+    "expected_severity": "MEDIUM"
+  },
+  {
+    "text": "Dose adjustment may be necessary when co-administered with fluoxetine.",
+    "other_drug": "fluoxetine",
+    "expected_severity": "MEDIUM"
+  },
+  {
+    "text": "No clinically significant interaction has been observed with acetaminophen at recommended doses.",
+    "other_drug": "acetaminophen",
+    "expected_severity": "LOW"
+  },
+  {
+    "text": "Minor interaction with omeprazole; no dose adjustment is necessary in most patients.",
+    "other_drug": "omeprazole",
+    "expected_severity": "LOW"
+  },
+  {
+    "text": "This drug has been studied in combination with metformin in clinical trials.",
+    "other_drug": "metformin",
+    "expected_severity": "MEDIUM",
+    "expected_confidence": "low",
+    "note": "mentions the drug but uses no known signal phrase — should fall back to MEDIUM/low-confidence, not silently guess LOW or HIGH"
+  },
+  {
+    "text": "Interactions with grapefruit juice have been reported; consult your pharmacist.",
+    "other_drug": "warfarin",
+    "expected_severity": null,
+    "note": "warfarin isn't mentioned in this text at all — must return None, not a guess"
+  }
+]
